@@ -1,0 +1,11 @@
+Debug/
+x64/
+
+ca-bundle.crt
+curl.exe
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+temp_strandbad_biel.png
+temp_wsa_ipsach.png
