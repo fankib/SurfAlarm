@@ -1,0 +1,3 @@
+#!/bin/bash
+
+g++ -o SurfAlarm_i386 *.o `libpng-config --ldflags`
