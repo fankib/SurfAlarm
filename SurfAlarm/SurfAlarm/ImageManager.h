@@ -3,8 +3,8 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <png++/png.hpp>
 
-#include "png++-0.2.9\png.hpp"
 #include "dirent.h"
 
 #include "Parameter.h"

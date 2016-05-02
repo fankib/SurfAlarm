@@ -7,5 +7,7 @@ curl.exe
 *.vcxproj.filters
 *.vcxproj.user
 
+*.o
+
 temp_strandbad_biel.png
 temp_wsa_ipsach.png

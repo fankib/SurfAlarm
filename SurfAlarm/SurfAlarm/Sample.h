@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string>
 
-#include "png++-0.2.9\png.hpp"
+#include <png++/png.hpp>
 
 typedef png::image<png::rgb_pixel> image_rgb;
 

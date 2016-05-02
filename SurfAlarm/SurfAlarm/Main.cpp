@@ -61,7 +61,4 @@ void doStaticJob() {
 		controller.CheckSample(*(samples->at(i)));
 	}
 	*/
-	
-
-	getchar();
 }
