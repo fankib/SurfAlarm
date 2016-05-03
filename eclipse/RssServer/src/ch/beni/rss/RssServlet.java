@@ -26,6 +26,7 @@ public class RssServlet extends HttpServlet {
 
 	private static String response = null;
 	private static long latestTimestamp = 0;
+	private static Object responseLock = new Object();
 
 	/*
 	 * 
@@ -35,7 +36,7 @@ public class RssServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		synchronized (response) {
+		synchronized (responseLock) {
 
 			long now = new Date().getTime();
 
