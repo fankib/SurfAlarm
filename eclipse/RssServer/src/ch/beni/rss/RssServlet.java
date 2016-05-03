@@ -19,9 +19,14 @@ public class RssServlet extends HttpServlet {
 	private static final String REPLACE_DESCRIPTION = "%DESCRIPTION%";
 	private static final String REPLACE_GUID = "%GUID%";
 	private static final String REPLACE_PUBDATE = "%PUBDATE%";
-	
+
+	private static final long FIVE_MINUTES = 1000 * 60 * 5;
+
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-	
+
+	private String response = null;
+	private long latestTimestamp = 0;
+
 	/**
 	 * 
 	 */
@@ -30,48 +35,62 @@ public class RssServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		BufferedReader templateReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("rsstemplate.xml")));
+		long now = new Date().getTime();
+
+		if (response == null || now - latestTimestamp > FIVE_MINUTES) {
+
+			String description;
+			try {
+				Process p = Runtime.getRuntime().exec("./surfalarm");
+				// Process p = Runtime.getRuntime().exec("pwd");
+				p.waitFor();
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+				StringBuilder sbDescription = new StringBuilder();
+				for (String line; (line = reader.readLine()) != null;) {
+					sbDescription.append(line);
+					sbDescription.append("\n");
+				}
+				description = sbDescription.toString();
+
+			} catch (InterruptedException e) {
+				throw new ServletException(e);
+			}
+
+			if (response == null || description.contains("Maybe") || description.contains("Yes")) {
+				// update latestValue
+				updateResponse(description, now);
+			}
+		}
+
+		resp.getWriter().write(response);
+		resp.getWriter().flush();
+
+	}
+
+	private void updateResponse(String description, long now) throws IOException {
+		String guid = UUID.randomUUID().toString();
+		String pubDate = sdf.format(new Date());
+
+		BufferedReader templateReader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream("rsstemplate.xml")));
 		StringBuilder sb = new StringBuilder();
-		for ( String line; (line=templateReader.readLine()) != null; ){
+		for (String line; (line = templateReader.readLine()) != null;) {
 			sb.append(line);
 			sb.append("\n");
 		}
 		String template = sb.toString();
-		
 		// dirty:
 		templateReader.close();
 
-		StringBuilder sbDescription = new StringBuilder();
-
-		try {
-			Process p = Runtime.getRuntime().exec("./surfalarm");
-			// Process p = Runtime.getRuntime().exec("pwd");
-			p.waitFor();
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-			for (String line; (line = reader.readLine()) != null;) {
-				sbDescription.append(line);
-				sbDescription.append("\n");
-			}
-
-		} catch (InterruptedException e) {
-			throw new ServletException(e);
-		}
-
-		String guid = UUID.randomUUID().toString();
-		String pubDate = sdf.format(new Date());
-		
 		// replace:
-		String updated = template.replace(REPLACE_DESCRIPTION, sbDescription.toString()) //
-		 .replace(REPLACE_GUID, guid) //
-		 .replace(REPLACE_PUBDATE, pubDate);
-		
-		
-		resp.getWriter().write(updated);
-		resp.getWriter().flush();
+		String updated = template.replace(REPLACE_DESCRIPTION, description) //
+				.replace(REPLACE_GUID, guid) //
+				.replace(REPLACE_PUBDATE, pubDate);
+
+		response = updated;
+		latestTimestamp = now;
 	}
-
-
 
 }
