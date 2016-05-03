@@ -32,9 +32,9 @@ void doStaticJob() {
 	image_rgb image_strandbad("temp_strandbad_biel.png", png::require_color_space<png::rgb_pixel>());
 	image_rgb image_wsaipsach("temp_wsa_ipsach.png", png::require_color_space<png::rgb_pixel>());
 
-	string strSample = Parameter::pathToTrainingSet + Parameter::pathToMaybe + "original.png.sample.0.png";
-	image_rgb *imSample = new image_rgb(strSample, png::require_color_space<png::rgb_pixel>());
-	Sample sample(imSample);
+//	string strSample = Parameter::pathToTrainingSet + Parameter::pathToMaybe + "original.png.sample.0.png";
+//	image_rgb *imSample = new image_rgb(strSample, png::require_color_space<png::rgb_pixel>());
+//	Sample sample(imSample);
 	// ----
 	
 
@@ -48,7 +48,7 @@ void doStaticJob() {
 	// controller.TrainGenAlg();
 
 	// check:
-	cout << endl << "Strandbad: ";
+	cout << "Strandbad: ";
 	controller.Check(image_strandbad);
 
 	cout << "WSA-Ipsach: ";
