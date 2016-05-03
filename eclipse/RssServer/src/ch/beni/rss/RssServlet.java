@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
@@ -16,6 +18,9 @@ public class RssServlet extends HttpServlet {
 
 	private static final String REPLACE_DESCRIPTION = "%DESCRIPTION%";
 	private static final String REPLACE_GUID = "%GUID%";
+	private static final String REPLACE_PUBDATE = "%PUBDATE%";
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 	
 	/**
 	 * 
@@ -39,7 +44,8 @@ public class RssServlet extends HttpServlet {
 		StringBuilder sbDescription = new StringBuilder();
 
 		try {
-			Process p = Runtime.getRuntime().exec("surfalarm");
+			Process p = Runtime.getRuntime().exec("./surfalarm");
+			// Process p = Runtime.getRuntime().exec("pwd");
 			p.waitFor();
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -54,12 +60,15 @@ public class RssServlet extends HttpServlet {
 		}
 
 		String guid = UUID.randomUUID().toString();
+		String pubDate = sdf.format(new Date());
 		
 		// replace:
-		String updateDescription = template.replace(REPLACE_DESCRIPTION, sbDescription.toString());
-		String updateAll = updateDescription.replace(REPLACE_GUID, guid);
+		String updated = template.replace(REPLACE_DESCRIPTION, sbDescription.toString()) //
+		 .replace(REPLACE_GUID, guid) //
+		 .replace(REPLACE_PUBDATE, pubDate);
 		
-		resp.getWriter().write(updateAll);
+		
+		resp.getWriter().write(updated);
 		resp.getWriter().flush();
 	}
 
