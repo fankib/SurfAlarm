@@ -24,10 +24,10 @@ public class RssServlet extends HttpServlet {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
-	private String response = null;
-	private long latestTimestamp = 0;
+	private static String response = null;
+	private static long latestTimestamp = 0;
 
-	/**
+	/*
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -35,37 +35,41 @@ public class RssServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		long now = new Date().getTime();
+		synchronized (response) {
 
-		if (response == null || now - latestTimestamp > FIVE_MINUTES) {
+			long now = new Date().getTime();
 
-			String description;
-			try {
-				Process p = Runtime.getRuntime().exec("./surfalarm");
-				// Process p = Runtime.getRuntime().exec("pwd");
-				p.waitFor();
+			if (response == null || now - latestTimestamp > FIVE_MINUTES) {
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String description;
+				try {
+					Process p = Runtime.getRuntime().exec("./surfalarm");
+					// Process p = Runtime.getRuntime().exec("pwd");
+					p.waitFor();
 
-				StringBuilder sbDescription = new StringBuilder();
-				for (String line; (line = reader.readLine()) != null;) {
-					sbDescription.append(line);
-					sbDescription.append("\n");
+					BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+					StringBuilder sbDescription = new StringBuilder();
+					for (String line; (line = reader.readLine()) != null;) {
+						sbDescription.append(line);
+						sbDescription.append("\n");
+					}
+					description = sbDescription.toString();
+
+				} catch (InterruptedException e) {
+					throw new ServletException(e);
 				}
-				description = sbDescription.toString();
 
-			} catch (InterruptedException e) {
-				throw new ServletException(e);
+				if (response == null || description.contains("Maybe") || description.contains("Yes")) {
+					// update latestValue
+					updateResponse(description, now);
+				}
 			}
 
-			if (response == null || description.contains("Maybe") || description.contains("Yes")) {
-				// update latestValue
-				updateResponse(description, now);
-			}
+			resp.getWriter().write(response);
+			resp.getWriter().flush();
+
 		}
-
-		resp.getWriter().write(response);
-		resp.getWriter().flush();
 
 	}
 
