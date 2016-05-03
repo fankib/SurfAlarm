@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+
+  <channel>
+    <title>SurfAlarm</title>
+    <link>benjamin-fankhauser.ch/SurfAlarm</link>
+    <description>Automatischer Surfalarm</description>
+    <language>de-CH</language>
+    <copyright>Benjamnin Fankhauser</copyright>
+    <pubDate>03.05.2016</pubDate>
+
+
+    <item>
+      <title>SurfAlarm!</title>
+      <description>%DESCRIPTION%</description>
+      <guid>%GUID%</guid>
+      <link>benjamin-fankhauser.ch/SurfAlarm</link>
+      <author>Benjamin Fankhauser</author>
+      <pubDate>03.05.2016</pubDate>
+    </item>
+    
+  </channel>
+</rss>

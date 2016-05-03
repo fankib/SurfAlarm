@@ -5,3 +5,5 @@ surfalarm_SOURCES = ResponseState.h CGenAlg.h CGenAlg.cpp Controller.h Controlle
 surfalarmdir = ./
 surfalarm_DATA = params.ini
 dist_surfalarm_DATA = params.ini
+
+
