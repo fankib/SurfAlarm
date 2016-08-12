@@ -1,8 +1,9 @@
 #!/bin/bash
 
 autoscan
+aclocal
 autoconf
-automake
+automake --add-missing
 
 mkdir build
 cd build
