@@ -4,7 +4,7 @@ AM_INIT_AUTOMAKE
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11
 
-# AC_CHECK_LIB([png++], [png_create_read_struct])
+#AC_CHECK_LIB([png++], [png_create_read_struct])
 #PKG_CHECK_MODULES([libpng12])
 AC_MSG_CHECKING([Check for libpng12:])
 AC_CHECK_LIB([png], [png_create_write_struct_2])
