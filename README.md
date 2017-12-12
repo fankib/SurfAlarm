@@ -7,5 +7,5 @@ Note that this is an implementation of some crapy examples to fit my needs and n
 * png++
 * curl
 
-# Sources
+# Credits
 Thanks to "http://fedora.cis.cau.edu/~bmobrien/smart%20sweepers%20-%20v1.0/" where I found some existing implementation of a Neuronal Net with a genetic training alogirthm to start with. I have no idea if its their code or not.
